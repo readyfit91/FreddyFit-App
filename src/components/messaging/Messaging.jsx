@@ -462,7 +462,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
                       👤 Profile
                     </button>
                   )}
-                  <button style={{
+                  <button onClick={() => alert("Voice calling coming soon!")} style={{
                     padding: "8px 16px", borderRadius: 10, border: `1.5px solid ${C.border}`,
                     background: C.white, color: C.greyDark,
                     fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: ff,
@@ -593,7 +593,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
                       ))}
                     </div>
 
-                    <button style={{
+                    <button onClick={() => alert("Shared media view coming soon!")} style={{
                       marginTop: 16, width: "100%", padding: "10px 0",
                       background: C.blueLight, color: C.blue, border: "none",
                       borderRadius: 10, fontSize: 13, fontWeight: 700,
@@ -640,7 +640,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
                   )}
 
                   {/* Attachment button */}
-                  <button title="Attach file" style={{
+                  <button title="Attach file" onClick={() => alert("File attachments coming soon!")} style={{
                     width: 40, height: 40, borderRadius: 10, flexShrink: 0,
                     background: C.greyLight, border: `1.5px solid ${C.border}`,
                     cursor: "pointer", fontSize: 18, display: "flex",
