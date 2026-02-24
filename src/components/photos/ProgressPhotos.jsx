@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import LOGO_IMG from "../../assets/freddyfit-logo.png";
 
 const C = {
   blue:       "#1AABE3",
@@ -26,7 +27,7 @@ if (typeof document !== "undefined") {
   document.head.appendChild(l);
 }
 
-const LOGO_B64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NDAgMTE1Ij4KICA8dGV4dCB4PSIwIiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsIE5hcnJvdywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNzYiIGZvbnQtd2VpZ2h0PSIzMDAiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjOUNBM0FGIj5GUkVERFk8L3RleHQ+CiAgPHRleHQgeD0iMzE2IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9Ijc2IiBmb250LXdlaWdodD0iODAwIiBsZXR0ZXItc3BhY2luZz0iMyIgZmlsbD0iIzFBQUJFMyI+RklUPC90ZXh0PgogIDxsaW5lIHgxPSI0NzQiIHkxPSI4IiB4Mj0iNDc0IiB5Mj0iODIiIHN0cm9rZT0iI0NCRDVFMSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8Y2lyY2xlIGN4PSI1MDciIGN5PSI0NCIgcj0iMzQiIGZpbGw9IiMxQUFCRTMiLz4KICA8dGV4dCB4PSI0OTEiIHk9IjYyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IndoaXRlIj5GPC90ZXh0PgogIDx0ZXh0IHg9IjY4IiB5PSIxMDgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjUwMCIgbGV0dGVyLXNwYWNpbmc9IjciIGZpbGw9IiMxQUFCRTMiPlZJU1VBTElaRSDCtyBETyDCtyBCRUNPTUU8L3RleHQ+Cjwvc3ZnPg==";
+const LOGO_B64 = LOGO_IMG;
 
 // ── PLACEHOLDER PHOTO COLORS (simulate photos with gradients) ─────────────
 const PHOTO_GRADIENTS = [
