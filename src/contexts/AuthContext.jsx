@@ -25,12 +25,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function fetchProfile(uid) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", uid)
       .single();
-    setProfile(data);
+    if (error) console.error("Profile fetch error:", error.message);
+    setProfile(data || null);
     setLoading(false);
   }
 

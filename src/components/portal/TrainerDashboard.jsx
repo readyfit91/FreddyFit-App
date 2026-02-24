@@ -510,7 +510,7 @@ function ClientsPage() {
           <div style={{ fontSize:26, fontWeight:900, color:C.text }}>Clients</div>
           <div style={{ fontSize:14, color:C.textMuted, marginTop:4 }}>Manage your FREDDY FIT roster</div>
         </div>
-        <button style={S.btn}>+ Add Client</button>
+        <button style={S.btn} onClick={() => window.location.href = "/trainer/clients"}>+ Add Client</button>
       </div>
 
       <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
@@ -975,8 +975,9 @@ export default function TrainerDashboard() {
   }, []);
 
   async function fetchProfile(uid) {
-    const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
-    setProfile(data);
+    const { data, error } = await supabase.from("profiles").select("*").eq("id", uid).single();
+    if (error) console.error("Profile fetch error:", error.message);
+    setProfile(data || null);
     setAuthLoading(false);
   }
 
