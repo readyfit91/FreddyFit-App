@@ -93,50 +93,67 @@ export default function Messaging({ role: initialRole = "trainer" }) {
   const loadContacts = useCallback(async (userId, currentRole) => {
     setLoading(true);
     if (currentRole === "trainer") {
+      // RLS on profiles limits trainer to only see clients with accepted invites
       const { data } = await supabase
-        .from("invites")
-        .select("client_id, profiles:client_id(id, full_name, avatar_color, goal)")
-        .eq("trainer_id", userId)
-        .eq("status", "accepted");
+        .from("profiles")
+        .select("id, first_name, last_name, fitness_level")
+        .eq("role", "client");
 
       if (data && data.length > 0) {
-        const list = data.map(row => {
-          const p = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
-          return {
-            id: row.client_id,
-            name: p?.full_name || "Client",
-            avatar: (p?.full_name || "C")[0].toUpperCase(),
-            color: p?.avatar_color || C.blue,
-            goal: p?.goal || "",
-            online: false,
-          };
-        });
+        const list = data.map(p => ({
+          id: p.id,
+          name: [p.first_name, p.last_name].filter(Boolean).join(" ") || "Client",
+          avatar: (p.first_name || "C")[0].toUpperCase(),
+          color: C.blue,
+          goal: p.fitness_level || "",
+          online: false,
+        }));
         setContacts(list);
         setActiveId(list[0].id);
       } else {
         setContacts([]);
       }
     } else {
-      const { data } = await supabase
-        .from("invites")
-        .select("trainer_id, profiles:trainer_id(id, full_name, avatar_color)")
-        .eq("client_id", userId)
-        .eq("status", "accepted")
-        .limit(1)
-        .maybeSingle();
+      // Find the trainer linked to this client via accepted invite
+      const { data: myProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", userId)
+        .single();
 
-      if (data) {
-        const p = Array.isArray(data.profiles) ? data.profiles[0] : data.profiles;
-        const trainer = {
-          id: data.trainer_id,
-          name: p?.full_name || "Freddy",
-          avatar: (p?.full_name || "F")[0].toUpperCase(),
-          color: C.blue,
-          goal: "Personal Trainer",
-          online: false,
-        };
-        setContacts([trainer]);
-        setActiveId(trainer.id);
+      if (myProfile?.email) {
+        const { data: inv } = await supabase
+          .from("invites")
+          .select("trainer_id")
+          .eq("email", myProfile.email)
+          .eq("status", "accepted")
+          .limit(1)
+          .maybeSingle();
+
+        if (inv?.trainer_id) {
+          const { data: trainerProfile } = await supabase
+            .from("profiles")
+            .select("id, first_name, last_name")
+            .eq("id", inv.trainer_id)
+            .single();
+
+          if (trainerProfile) {
+            const contact = {
+              id: trainerProfile.id,
+              name: [trainerProfile.first_name, trainerProfile.last_name].filter(Boolean).join(" ") || "Freddy",
+              avatar: (trainerProfile.first_name || "F")[0].toUpperCase(),
+              color: C.blue,
+              goal: "Personal Trainer",
+              online: false,
+            };
+            setContacts([contact]);
+            setActiveId(contact.id);
+          } else {
+            setContacts([]);
+          }
+        } else {
+          setContacts([]);
+        }
       } else {
         setContacts([]);
       }
@@ -155,8 +172,8 @@ export default function Messaging({ role: initialRole = "trainer" }) {
       .from("messages")
       .select("*")
       .or(
-        `and(sender_id.eq.${currentUserId},recipient_id.eq.${contactId}),` +
-        `and(sender_id.eq.${contactId},recipient_id.eq.${currentUserId})`
+        `and(sender_id.eq.${currentUserId},receiver_id.eq.${contactId}),` +
+        `and(sender_id.eq.${contactId},receiver_id.eq.${currentUserId})`
       )
       .order("created_at", { ascending: true });
 
@@ -182,7 +199,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
     supabase
       .from("messages")
       .update({ read: true })
-      .eq("recipient_id", currentUserId)
+      .eq("receiver_id", currentUserId)
       .eq("sender_id", activeId)
       .then(() => {
         setMessages(prev => ({
@@ -206,7 +223,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
         event: "INSERT",
         schema: "public",
         table: "messages",
-        filter: `recipient_id=eq.${currentUserId}`,
+        filter: `receiver_id=eq.${currentUserId}`,
       }, (payload) => {
         const m = payload.new;
         const mapped = {
@@ -244,7 +261,7 @@ export default function Messaging({ role: initialRole = "trainer" }) {
 
     const { data, error } = await supabase
       .from("messages")
-      .insert({ sender_id: currentUserId, recipient_id: activeId, body: msg })
+      .insert({ sender_id: currentUserId, receiver_id: activeId, body: msg })
       .select()
       .single();
 

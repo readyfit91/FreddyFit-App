@@ -149,3 +149,18 @@ create policy "users_own_messages" on messages
 -- Trainers manage their own invites
 create policy "trainers_own_invites" on invites
   for all using (auth.uid() = trainer_id);
+
+-- Clients can see the trainer who invited them
+create policy "client_sees_trainer" on profiles
+  for select using (
+    auth.uid() = id or
+    exists (
+      select 1 from invites
+      where trainer_id = profiles.id
+        and email = (select email from profiles where id = auth.uid())
+        and status = 'accepted'
+    )
+  );
+
+-- Enable realtime for messages table
+alter publication supabase_realtime add table messages;
