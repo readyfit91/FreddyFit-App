@@ -488,14 +488,14 @@ function ProfileDrawer({ client, onClose }) {
 
         {/* Actions */}
         <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 10 }}>
-          <button style={{ padding: "12px 0", borderRadius: 12, border: "none", background: C.blue, color: C.white, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: ff, boxShadow: C.shadowLg }}>
+          <button style={{ padding: "12px 0", borderRadius: 12, border: "none", background: C.blue, color: C.white, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: ff, boxShadow: C.shadowLg }} onClick={() => window.location.href="/trainer/messages"}>
             💬 Send Message
           </button>
-          <button style={{ padding: "12px 0", borderRadius: 12, border: `1.5px solid ${C.border}`, background: "transparent", color: C.greyDark, fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: ff }}>
+          <button style={{ padding: "12px 0", borderRadius: 12, border: `1.5px solid ${C.border}`, background: "transparent", color: C.greyDark, fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: ff }} onClick={() => alert("Workout plan builder coming soon!")}>
             📋 View Workout Plan
           </button>
           {client.status === "pending" && (
-            <button style={{ padding: "12px 0", borderRadius: 12, border: `1.5px solid ${C.blue}`, background: C.blueLight, color: C.blue, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: ff }}>
+            <button style={{ padding: "12px 0", borderRadius: 12, border: `1.5px solid ${C.blue}`, background: C.blueLight, color: C.blue, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: ff }} onClick={() => { onResend(client.id); onClose(); }}>
               📨 Resend Invite
             </button>
           )}
@@ -728,7 +728,7 @@ export default function AddClient() {
               <div style={{ fontSize: 14, fontWeight: 800, color: C.text }}>{pendingCount} client{pendingCount > 1 ? "s" : ""} haven't completed signup yet</div>
               <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>Invite links expire after 48 hours. Resend if they haven't signed up.</div>
             </div>
-            <button style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: C.yellow, color: C.white, fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: ff }}>
+            <button style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: C.yellow, color: C.white, fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: ff }} onClick={() => { clients.filter(c => c.status==="pending").forEach(c => onResend(c.id)); }}>
               Resend All Pending
             </button>
           </div>
