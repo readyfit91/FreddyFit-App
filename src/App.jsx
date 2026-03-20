@@ -7,6 +7,7 @@ import Messaging         from "./components/messaging/Messaging";
 import OnboardingFlow    from "./components/onboarding/OnboardingFlow";
 import NutritionLog      from "./components/nutrition/NutritionLog";
 import ProgressPhotos    from "./components/photos/ProgressPhotos";
+import Calendar          from "./components/calendar/Calendar";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           {/* Public */}
           <Route path="/"           element={<Navigate to="/trainer/dashboard" replace />} />
           <Route path="/onboarding" element={<OnboardingFlow />} />
+          <Route path="/calendar"   element={<Calendar />} />
 
           {/* Trainer portal — manages its own Supabase auth session internally */}
           <Route path="/trainer/dashboard" element={<TrainerDashboard />} />
